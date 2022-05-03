@@ -1,2 +1,50 @@
 # crud php
 ## crud com php puro para referência e estudo. 
+
+```
+<?php
+  $pdo = new PDO('mysql:host=localhost;dbname=crudteste','root','');
+    
+  if(isset($_GET['delete']))
+  {
+      $id = (int)$_GET['delete'];
+      $pdo->exec("DELETE FROM usuario WHERE id=$id");
+      echo 'deletado com sucesso o id.'.$id;
+  }
+
+  //insert
+  if(isset($_POST['nome']))
+  {
+      $sql = $pdo->prepare("INSERT INTO usuario VALUES (null,?,?)");
+      $sql->execute(array($_POST['nome'], $_POST['email']));
+      echo 'Inserido com sucesso!';
+  }
+
+  //para atualizar
+
+  $nome = 'Robertinho';
+  $pdo->exec("update usuario set nome='$nome' where id=10")
+    
+?>
+
+<form method="post">
+    <span>Nome: </span>
+    <input type="text" name="nome">
+    <span>E-mail: </span>
+    <input type="text" name="email">
+    <input type="submit" value="Enviar">
+</form>
+
+<?php
+    $sql = $pdo->prepare("SELECT * FROM usuario");
+    $sql -> execute();
+
+    $fetchUsuario = $sql->fetchAll();
+
+    foreach ($fetchUsuario as $key => $value)
+    {
+        echo '<a href="?delete='.$value['id'].'">(x)</a>'.$value['nome'].' | '.$value['email'];
+        echo '<hr>';
+    } 
+?>
+```
